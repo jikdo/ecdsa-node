@@ -7,6 +7,7 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [privateKey, setPrivateKey] = useState("");
 
+
   return (
     <div className="app">
       <Wallet
