@@ -10,7 +10,6 @@ function Wallet({ privateKey, setPrivateKey, balance, setBalance}) {
     setPrivateKey(privateKey);
     setPublicKey(utils.toHex(secp.secp256k1.getPublicKey(utils.hexToBytes(privateKey))))
     if (privateKey) {
-      console.log('sending')
       const {
         data: { balance },
       } = await server.get(`balance/${publicKey}`);

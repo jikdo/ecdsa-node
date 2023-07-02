@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const port = 3042;
 
+const secp = require('ethereum-cryptography/secp256k1')
+
 app.use(cors());
 app.use(express.json());
 
@@ -14,15 +16,31 @@ const balances = {
 
 app.get("/balance/:address", (req, res) => {
   const { address } = req.params;
-  console.log(address)
   const balance = balances[address] || 0;
   res.send({ balance });
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount } = req.body;
+  console.log('received requ')
+  const { signature, hash, recipient, amount } = req.body;
+  let sender = null
+  console.log('what is going on  here')
+  for (address of Object.keys(balances)) {
+    console.log('verifiying', address)
+    if (secp.secp256k1.verify(signature, hash, address)) {
+      sender = address
+      console.log(sender, 'a')
+      break
+    }
+  }
 
-  setInitialBalance(sender);
+  if (!sender) {
+    // if no sender found, get puublic key from sig
+    setInitialBalance('');
+  }
+  
+
+
   setInitialBalance(recipient);
 
   if (balances[sender] < amount) {
